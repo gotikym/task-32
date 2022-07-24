@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 internal class Program
@@ -9,69 +9,63 @@ internal class Program
 
         bool isPlaying = true;
 
-        int playerX;
-        int playerY;
-        int playerDX = 0;
-        int playerDY = 0;
+        int playerPositionX;
+        int playerPositionY;
+        int playerDerectionX = 0;
+        int playerDerectionY = 0;
 
-        char[,] map = ReadMap("map", out playerX, out playerY);
+        char[,] map = ReadMap("map", out playerPositionX, out playerPositionY);
 
         DrawMap(map);
-       
-        Play(playerX, playerY, playerDX,playerDY, map, isPlaying);
-    }
 
-    static void Play(int playerX, int playerY, int playerDX, int playerDY, char[,] map, bool isPlaying)
-    {
         while (isPlaying)
         {
-            Console.SetCursorPosition(playerY, playerX);
+            Console.SetCursorPosition(playerPositionY, playerPositionX);
             Console.Write('@');
 
             if (Console.KeyAvailable)
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
 
-                ChangeDerection(key, ref playerDX, ref playerDY);
+                ChangeDerection(key, ref playerDerectionX, ref playerDerectionY);
             }
 
-            if (map[playerX + playerDX, playerY + playerDY] != '#')
+            if (map[playerPositionX + playerDerectionX, playerPositionY + playerDerectionY] != '#')
             {
-                Move(ref playerX, ref playerY, playerDX, playerDY);
+                Move(ref playerPositionX, ref playerPositionY, playerDerectionX, playerDerectionY);
             }
 
             System.Threading.Thread.Sleep(250);
         }
     }
 
-    static void ChangeDerection(ConsoleKeyInfo key, ref int DX, ref int DY)
+    static void ChangeDerection(ConsoleKeyInfo key, ref int dX, ref int dY)
     {
         switch (key.Key)
         {
             case ConsoleKey.UpArrow:
-                DX = -1; DY = 0;
+                dX = -1; dY = 0;
                 break;
             case ConsoleKey.DownArrow:
-                DX = 1; DY = 0;
+                dX = 1; dY = 0;
                 break;
             case ConsoleKey.LeftArrow:
-                DX = 0; DY = -1;
+                dX = 0; dY = -1;
                 break;
             case ConsoleKey.RightArrow:
-                DX = 0; DY = 1;
                 break;
         }
     }
 
-    static void Move(ref int X, ref int Y, int DX, int DY)
+    static void Move(ref int x, ref int y, int dX, int dY)
     {
-        Console.SetCursorPosition(Y, X);
+        Console.SetCursorPosition(y, x);
         Console.Write(" ");
 
-        X += DX;
-        Y += DY;
+        x += dX;
+        y += dY;
 
-        Console.SetCursorPosition(Y, X);
+        Console.SetCursorPosition(y, x);
         Console.Write("@");
     }
 
@@ -83,16 +77,15 @@ internal class Program
             {
                 Console.Write(map[i, j]);
             }
+
             Console.WriteLine();
         }
     }
 
-
-
-    static char[,] ReadMap(string mapName, out int playerX, out int playerY)
+    static char[,] ReadMap(string mapName, out int playerPositionX, out int playerPositionY)
     {
-        playerX = 0;
-        playerY = 0;
+        playerPositionX = 0;
+        playerPositionY = 0;
         string[] newFile = File.ReadAllLines($"Maps/{mapName}.txt");
         char[,] map = new char[newFile.Length, newFile[0].Length];
 
@@ -104,11 +97,12 @@ internal class Program
 
                 if (map[i, j] == '@')
                 {
-                    playerX = i;
-                    playerY = j;
+                    playerPositionX = i;
+                    playerPositionY = j;
                 }
             }
         }
+
         return map;
     }
 }

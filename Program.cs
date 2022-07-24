@@ -11,8 +11,8 @@ internal class Program
 
         int playerPositionX;
         int playerPositionY;
-        int playerDerectionX = 0;
-        int playerDerectionY = 0;
+        int playerDirectionX = 0;
+        int playerDirectionY = 0;
 
         char[,] map = ReadMap("map", out playerPositionX, out playerPositionY);
 
@@ -27,45 +27,61 @@ internal class Program
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
 
-                ChangeDerection(key, ref playerDerectionX, ref playerDerectionY);
+                ChangeDerection(key, ref playerDirectionX, ref playerDirectionY);
             }
 
-            if (map[playerPositionX + playerDerectionX, playerPositionY + playerDerectionY] != '#')
+            if (map[playerPositionX + playerDirectionX, playerPositionY + playerDirectionY] != '#')
             {
-                Move(ref playerPositionX, ref playerPositionY, playerDerectionX, playerDerectionY);
+                Move(ref playerPositionX, ref playerPositionY, playerDirectionX, playerDirectionY);
             }
 
             System.Threading.Thread.Sleep(250);
         }
     }
 
-    static void ChangeDerection(ConsoleKeyInfo key, ref int dX, ref int dY)
+    static void ChangeDerection(ConsoleKeyInfo key, ref int playerDirectionX, ref int playerDirectionY)
     {
         switch (key.Key)
         {
             case ConsoleKey.UpArrow:
-                dX = -1; dY = 0;
+
+                playerDirectionX = -1; 
+                playerDirectionY = 0;
+
                 break;
+
             case ConsoleKey.DownArrow:
-                dX = 1; dY = 0;
+
+                playerDirectionX = 1;
+                playerDirectionY = 0;
+
                 break;
+
             case ConsoleKey.LeftArrow:
-                dX = 0; dY = -1;
+
+                playerDirectionX = 0; 
+                playerDirectionY = -1;
+
                 break;
+
             case ConsoleKey.RightArrow:
+
+                playerDirectionX = 0; 
+                playerDirectionY = 1;
+
                 break;
         }
     }
 
-    static void Move(ref int x, ref int y, int dX, int dY)
+    static void Move(ref int positionX, ref int positionY, int directionX, int directionY)
     {
-        Console.SetCursorPosition(y, x);
+        Console.SetCursorPosition(positionY, positionX);
         Console.Write(" ");
 
-        x += dX;
-        y += dY;
+        positionX += directionX;
+        positionY += directionY;
 
-        Console.SetCursorPosition(y, x);
+        Console.SetCursorPosition(positionY, positionX);
         Console.Write("@");
     }
 
